@@ -22,13 +22,17 @@ for work whenever it is available.
 2. A `miner` that generates `stubs.Pair` events and publishes them to a
 `multiply` channel on the broker.
 
+
+
 You should be able to launch the broker with `go run broker/broker.go` and the
 miner with `go run miner/miner.go` -- nothing visible should happen except that
 the broker will print out a notification that the `multiply` channel has been
 created.
 
-Your first task is to complete the `Factory` in `factory/factory.go`. This
-process should be a worker that:
+Your first task is to complete the `Factory` in `factory/factory.go`.
+
+
+This factory should be a worker that:
 
 - sets up an RPC *server* that registers a `Multiply` procedure. This procedure
   should accept a `stubs.Pair` and respond with a `stubs.JobReport`. You may
@@ -38,6 +42,10 @@ while it's running.
 - sends a `stubs.Subscription` request to the `multiply` channel, containing its
   own `ip:port` string and the correct string for the broker to use to call its
 `Multiply` procedure.
+
+The required mechanism is illustrated in the sequence diagram below.
+
+![Part 1](content/part1.png)
 
 You'll know if this is working correctly because once the factory is subscribed
 the broker will start sending it work and printing out the results of jobs.
@@ -74,6 +82,10 @@ You'll know the code is working when the broker reports results for division ope
 In this part you will link your `Multiply` and `Divide` procedures to create a pipeline. For every *two* `Multiply` results produced, the factory should ask the broker to `Divide` them by each other.
 
 This can be achieved by adding a new goroutine in the factory. When a `Multiply` procedure is completed, the factory should send each result to this goroutine. Once the goroutine has received two values, it should `Publish` a new `Pair` to the broker under the `divide` topic. It should then continue to wait for further results from the `Multiply` procedure.
+
+The required mechanism is illustrated in the sequence diagram below.
+
+![Part 2](content/part2.png)
 
 Test your pipeline using a single "multiply" miner. Do not use a "divide" miner this time.
 
