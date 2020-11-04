@@ -1,4 +1,23 @@
-# Message Broker in Go
+# Distributed Lab 3: Message Broker in Go
+
+## Using the lab sheet
+
+There are two ways to use the lab sheet, you can either:
+
+- [create a new repo from this template](https://github.com/UoB-CSA/distributed-lab-3/generate) - **this is the recommended way**
+- download a [zip file](https://github.com/UoB-CSA/distributed-lab-3/archive/master.zip)
+
+## Ratings
+
+Each question is rated to help you balance your work:
+
+- :red_circle::white_circle::white_circle::white_circle::white_circle: - Easy, strictly necessary.
+- :red_circle::red_circle::white_circle::white_circle::white_circle: - Medium, still necessary.
+- :red_circle::red_circle::red_circle::white_circle::white_circle: - Hard, necessary if you're aiming for higher marks.
+- :red_circle::red_circle::red_circle::red_circle::white_circle: - Hard, useful for coursework extensions.
+- :red_circle::red_circle::red_circle::red_circle::red_circle: - Hard, beyond what you need for any part of the coursework.
+
+## Introduction
 
 We are going to use a variant of the publish-subscribe model which uses a
 message broker for distributing work between many contributors.
@@ -10,7 +29,7 @@ want something more like a [worker pool](https://gobyexample.com/worker-pools)
 that accepts new machines joining the pool remotely and uses 'take' semantics to
 avoid workers duplicating work.
 
-## Part 1: The Multiply Factory
+## Part 1: The Multiply Factory :red_circle::red_circle::white_circle::white_circle::white_circle:
 
 Look at the skeleton code you've been given. There are two complete components:
 
@@ -22,15 +41,12 @@ for work whenever it is available.
 2. A `miner` that generates `stubs.Pair` events and publishes them to a
 `multiply` channel on the broker.
 
-
-
 You should be able to launch the broker with `go run broker/broker.go` and the
 miner with `go run miner/miner.go` -- nothing visible should happen except that
 the broker will print out a notification that the `multiply` channel has been
 created.
 
 Your first task is to complete the `Factory` in `factory/factory.go`.
-
 
 This factory should be a worker that:
 
@@ -61,7 +77,7 @@ server*.
 
 ## Part 2: The Multiply-Divide Pipeline
 
-### Part 2a: Division
+### Part 2a: Division :red_circle::red_circle::white_circle::white_circle::white_circle:
 
 Following the same steps, add a `Divide` procedure. It should also accept a `stubs.Pair` as the request and respond with a `stubs.JobReport`.
 
@@ -77,7 +93,7 @@ go run miner/miner.go -topic divide
 
 You'll know the code is working when the broker reports results for division operations. You should be able run multiple instances of your Factory (on different ports), and stop and start each of them.
 
-### Part 2b: Creating a Pipeline
+### Part 2b: Creating a Pipeline :red_circle::red_circle::red_circle::white_circle::white_circle:
 
 In this part you will link your `Multiply` and `Divide` procedures to create a pipeline. For every *two* `Multiply` results produced, the factory should ask the broker to `Divide` them by each other.
 
@@ -95,7 +111,7 @@ go run miner/miner.go
 
 You'll know the code is working when the broker reports results for division operations (the divisions will be the result of the pipeline). Again, you should be able run multiple instances of your Factory (on different ports), and stop and start each of them.
 
-## Part 3: Triplets
+## Part 3: Triplets :red_circle::red_circle::red_circle::white_circle::white_circle:
 
 The entire pipeline currently operates on `stubs.Pair`s. Modify it so that it
 instead works with Triplets of three integers. As well as the `factory`, you
