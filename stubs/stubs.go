@@ -22,7 +22,7 @@ type ChannelRequest struct {
 
 type Subscription struct {
 	Topic string
-	Connstr string
+	FactoryAddress string
 	Callback string
 }
 

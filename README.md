@@ -53,26 +53,39 @@ server*.
 
 ## Part 2: The Multiply-Divide Pipeline
 
-Your `Multiply` function is producing a lot of results, but the work is only
-using one channel on the broker at the moment. Modify your `factory.go` code so
-that for every *two* Multiply results produced, a `stubs.Pair` is published to a
-new `divide` channel.
+### Part 2a: Division
 
-To accomplish this, you'll need to modify what your `Multiply` method is doing,
-and you'll likely want another goroutine to monitor a [buffered
-channel](https://gobyexample.com/channel-buffering). 
+Following the same steps, add a `Divide` procedure. It should also accept a `stubs.Pair` as the request and respond with a `stubs.JobReport`.
 
-Also create a `Divide` procedure for your Factory, and subscribe your instance
-to the `divide` channel you created.
+Test your new procedure using two miners:
 
-You'll know the code is working when the broker reports results for division
-operations. Again, you should be able run multiple instances of your Factory (on
-different ports), and stop and start each of them.
+```bash
+Miner 1
+go run miner/miner.go
 
+Miner 2
+go run miner/miner.go -topic divide
+```
+
+You'll know the code is working when the broker reports results for division operations. You should be able run multiple instances of your Factory (on different ports), and stop and start each of them.
+
+### Part 2b: Creating a Pipeline
+
+In this part you will link your `Multiply` and `Divide` procedures to create a pipeline. For every *two* `Multiply` results produced, the factory should ask the broker to `Divide` them by each other.
+
+This can be achieved by adding a new goroutine in the factory. When a `Multiply` procedure is completed, the factory should send each result to this goroutine. Once the goroutine has received two values, it should `Publish` a new `Pair` to the broker under the `divide` topic. It should then continue to wait for further results from the `Multiply` procedure.
+
+Test your pipeline using a single "multiply" miner. Do not use a "divide" miner this time.
+
+```bash
+go run miner/miner.go
+```
+
+You'll know the code is working when the broker reports results for division operations (the divisions will be the result of the pipeline). Again, you should be able run multiple instances of your Factory (on different ports), and stop and start each of them.
 
 ## Part 3: Triplets
 
 The entire pipeline currently operates on `stubs.Pair`s. Modify it so that it
 instead works with Triplets of three integers. As well as the `factory`, you
 will need to edit the `miner` and `broker` code to accomplish this, and make a
-decision about what Divide means for three integer arguments. 
+decision about what Divide means for three integer arguments.

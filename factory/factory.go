@@ -14,7 +14,7 @@ type Factory struct {}
 
 
 func main(){
-	pAddr := flag.String("port","8050","Port to listen on")
+	pAddr := flag.String("ip", "127.0.0.1:8050", "IP and port to listen on")
 	brokerAddr := flag.String("broker","127.0.0.1:8030", "Address of broker instance")
 	flag.Parse()
 	//TODO: You'll need to set up the RPC server, and subscribe to the running broker instance.

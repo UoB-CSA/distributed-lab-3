@@ -57,16 +57,16 @@ func subscriber_loop(topic chan stubs.Pair, client *rpc.Client, callback string 
 //The subscribe function registers a worker to the topic, creating an RPC client,
 //and will use the given callback string as the callback function whenever work
 //is available.
-func subscribe(topic string, worker string, callback string) (err error){
+func subscribe(topic string, factoryAddress string, callback string) (err error){
 	fmt.Println("Subscription request")
 	topicmx.RLock()
 	ch := topics[topic]
 	topicmx.RUnlock()
-	client, err := rpc.Dial("tcp", worker)
+	client, err := rpc.Dial("tcp", factoryAddress)
 	if err == nil {
 		go subscriber_loop(ch, client, callback)
 	} else {
-		fmt.Println("Error subscribing ", worker)
+		fmt.Println("Error subscribing ", factoryAddress)
 		fmt.Println(err)
 		return err
 	}
@@ -81,7 +81,7 @@ func (b *Broker) CreateChannel(req stubs.ChannelRequest, res *stubs.StatusReport
 }
 
 func (b *Broker) Subscribe(req stubs.Subscription, res *stubs.StatusReport) (err error) {
-	err = subscribe(req.Topic, req.Connstr, req.Callback)
+	err = subscribe(req.Topic, req.FactoryAddress, req.Callback)
 	if err != nil {
 		res.Message = "Error during subscription"
 	}
