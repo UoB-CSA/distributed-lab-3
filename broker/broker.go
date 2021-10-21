@@ -5,7 +5,7 @@ import ("net/rpc"
 	"net"
 	"sync"
 	"fmt"
-	"pairbroker/stubs"
+	"uk.ac.bris.cs/distributed3/pairbroker/stubs"
 	"flag")
 
 var (
