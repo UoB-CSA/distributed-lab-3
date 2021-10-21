@@ -3,7 +3,7 @@ import ("net/rpc"
 	"flag"
 	"time"
 	"fmt"
-	"pairbroker/stubs"
+	"uk.ac.bris.cs/distributed3/pairbroker/stubs"
 	"math/rand")
 
 func main(){
