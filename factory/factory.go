@@ -3,7 +3,7 @@ package main
 import ("flag"
 	"fmt"
 	"net"
-	"pairbroker/stubs"
+	"uk.ac.bris.cs/distributed3/pairbroker/stubs"
 	"net/rpc")
 
 
